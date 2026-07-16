@@ -214,5 +214,3 @@ Durante lo sviluppo del progetto sono stati approfonditi:
 # Nota
 
 Questo repository contiene **la mia implementazione personale** del progetto finale del corso di **Algoritmi e Strutture Dati** (Politecnico di Milano, A.A. 2024–2025).
-
-La descrizione presente nel README rappresenta una sintesi realizzata da me e non riproduce il testo originale della prova d'esame.
