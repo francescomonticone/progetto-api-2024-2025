@@ -1,89 +1,218 @@
 # 🚛 MovHex – Ottimizzatore di percorsi su griglia esagonale
 
-> Progetto finale del corso di **Algoritmi e Strutture Dati** (A.A. 2024–2025).
+> Progetto finale del corso di **Algoritmi e Strutture Dati** – Politecnico di Milano (A.A. 2024–2025)
 
->Voto conseguito: 30 e lode 
+**Valutazione conseguita:** **30 e Lode**
+
+---
 
 ## Descrizione
 
 MovHex è un simulatore di una rete di trasporto progettato per calcolare percorsi a costo minimo su una mappa composta da celle esagonali.
 
-La mappa rappresenta una superficie suddivisa in esagoni regolari, all'interno della quale i veicoli possono muoversi sia tramite collegamenti terrestri tra esagoni adiacenti sia attraverso rotte aeree dirette create dinamicamente.
+La rete è modellata come un **grafo pesato dinamico** in cui i veicoli possono spostarsi:
 
-Il progetto è stato sviluppato come prova finale del corso di **Algoritmi e Strutture Dati** e pone particolare attenzione alla progettazione di strutture dati efficienti e all'implementazione di algoritmi per la ricerca del percorso minimo in presenza di modifiche dinamiche della rete.
+- tramite collegamenti terrestri tra esagoni adiacenti;
+- tramite rotte aeree direzionate aggiungibili e rimovibili durante l'esecuzione.
 
+Il progetto è stato sviluppato come prova finale del corso di **Algoritmi e Strutture Dati** con l'obiettivo di progettare strutture dati efficienti e algoritmi ottimizzati per la gestione di interrogazioni sul percorso minimo in presenza di aggiornamenti dinamici della rete.
 
+---
 
-## Funzionalità
+# Funzionalità
 
-* Inizializzazione di una mappa esagonale di dimensioni arbitrarie.
-* Gestione del costo di attraversamento di ciascun esagono.
-* Modifica dinamica dei costi di una regione della mappa.
-* Inserimento e rimozione di rotte aeree orientate.
-* Calcolo del percorso a costo minimo tra due esagoni.
-* Interfaccia a riga di comando conforme alle specifiche del progetto.
+- Inizializzazione di mappe esagonali di dimensioni arbitrarie.
+- Gestione dinamica del costo di attraversamento degli esagoni.
+- Aggiornamento locale dei costi mediante propagazione su raggio.
+- Inserimento e rimozione di rotte aeree orientate.
+- Calcolo del percorso minimo tra due esagoni.
+- Interfaccia a riga di comando conforme alle specifiche del progetto.
 
-## Modello della mappa
+---
 
-Ogni esagono è identificato da una coppia di coordinate `(colonna, riga)` e contiene:
+# Modello della mappa
 
-* un costo di uscita via terra;
-* fino a cinque rotte aeree uscenti;
-* collegamenti terrestri con gli esagoni adiacenti.
+La mappa è rappresentata come una griglia rettangolare di esagoni.
 
-Le rotte aeree sono direzionate e possono essere aggiunte o rimosse durante l'esecuzione del programma.
+Ogni esagono contiene:
 
-## Comandi supportati
+- costo di uscita via terra;
+- collegamenti terrestri verso gli esagoni adiacenti;
+- fino a cinque rotte aeree uscenti;
+- informazioni ausiliarie utilizzate dagli algoritmi di ricerca.
 
-Il programma implementa i seguenti comandi:
+Le rotte aeree sono direzionate e possono essere create o rimosse dinamicamente durante l'esecuzione.
 
-* `init` – inizializza la mappa;
-* `change_cost` – modifica i costi di una regione della mappa;
-* `toggle_air_route` – aggiunge o rimuove una rotta aerea;
-* `travel_cost` – calcola il costo minimo di percorrenza tra due esagoni.
+---
 
-## Aspetti algoritmici
+# Comandi implementati
 
-L'intera rete di trasporto viene modellata come un grafo pesato.
+| Comando | Descrizione |
+|----------|-------------|
+| `init` | Inizializza la mappa |
+| `change_cost` | Aggiorna il costo degli esagoni in una regione |
+| `toggle_air_route` | Inserisce o rimuove una rotta aerea |
+| `travel_cost` | Calcola il percorso a costo minimo |
 
-L'implementazione affronta i seguenti problemi algoritmici:
+---
 
-* rappresentazione efficiente del grafo;
-* gestione di aggiornamenti dinamici dei pesi;
-* ricerca del percorso minimo;
-* calcolo della distanza tra celle di una griglia esagonale;
-* gestione efficiente delle liste di adiacenza.
+# Strutture dati utilizzate
 
-## Ottimizzazioni
+## Array di nodi
 
-Le specifiche del progetto prevedono che:
+L'intera mappa è memorizzata in un **array monodimensionale** di strutture `node`.
 
-* le interrogazioni sul percorso minimo siano molto più frequenti delle modifiche alla rete;
-* le richieste di percorso siano concentrate in specifiche aree della mappa.
+Questa rappresentazione permette:
 
-L'implementazione è stata progettata tenendo conto di queste caratteristiche, privilegiando le prestazioni delle operazioni di ricerca rispetto agli aggiornamenti.
+- accesso diretto agli esagoni in tempo costante;
+- ottima località di memoria;
+- riduzione dell'overhead rispetto ad una rappresentazione completamente dinamica.
 
-## Tecnologie utilizzate
+Ogni nodo memorizza:
 
-* Linguaggio C
-* Grafi pesati
-* Liste di adiacenza
-* Code di priorità (ove utilizzate)
-* Gestione dinamica della memoria
+- costo di uscita;
+- vicini della griglia;
+- lista delle rotte aeree;
+- informazioni di supporto agli algoritmi.
 
-## Obiettivi didattici
+---
 
-Il progetto ha permesso di approfondire:
+## Liste di adiacenza
 
-* progettazione di strutture dati;
-* algoritmi su grafi;
-* ricerca del cammino minimo;
-* analisi della complessità;
-* gestione della memoria in C;
-* ottimizzazione delle prestazioni.
+Le rotte aeree sono implementate mediante **liste concatenate**.
 
-## Nota
+Questa scelta consente di utilizzare memoria proporzionale al numero effettivo di collegamenti e rende semplici le operazioni di inserimento e rimozione.
 
-Questo repository contiene la mia implementazione personale del progetto finale del corso di **Algoritmi e Strutture Dati** (A.A. 2024–2025).
+---
 
-La descrizione presente in questo README è una sintesi realizzata da me e non riproduce il testo originale della prova d'esame.
+## Min Heap
+
+Per il calcolo del percorso minimo è stato implementato un **Min Heap binario** realizzato tramite array.
+
+Il Min Heap gestisce efficientemente le operazioni di:
+
+- inserimento;
+- estrazione del minimo;
+- aggiornamento della priorità (`decrease-key`).
+
+Per velocizzare quest'ultima operazione viene mantenuto un vettore che associa ogni nodo alla sua posizione corrente nell'heap.
+
+---
+
+## Cache dei percorsi
+
+Poiché il testo della prova specifica che il comando `travel_cost` viene eseguito molto più frequentemente rispetto agli aggiornamenti della rete, è stata implementata una **cache dei percorsi**.
+
+La cache utilizza una **Hash Table con Separate Chaining** che memorizza:
+
+```
+(sorgente, destinazione) → costo minimo
+```
+
+Quando viene richiesta una coppia già calcolata, il risultato viene restituito immediatamente senza rieseguire la ricerca del percorso minimo.
+
+Ogni modifica della rete (`change_cost` o `toggle_air_route`) invalida automaticamente la cache.
+
+---
+
+## Cache dei vicini
+
+Durante l'inizializzazione vengono precalcolati i vicini della griglia esagonale la cui determinazione dipende dalla parità della riga.
+
+In questo modo le visite del grafo non devono ricalcolare continuamente le coordinate dei vicini.
+
+---
+
+# Algoritmi implementati
+
+L'implementazione combina diversi algoritmi classici:
+
+- rappresentazione di grafi pesati mediante liste di adiacenza;
+- ricerca del percorso minimo tramite algoritmo di Dijkstra;
+- gestione dinamica delle priorità mediante Min Heap;
+- ricerca in Hash Table;
+- calcolo della distanza tra celle di una griglia esagonale.
+
+---
+
+# Ottimizzazioni
+
+L'implementazione è stata progettata considerando il carico di lavoro previsto dalla consegna:
+
+- moltissime interrogazioni `travel_cost`;
+- pochi aggiornamenti della rete;
+- richieste concentrate nelle stesse aree della mappa.
+
+Per questo motivo sono state introdotte varie ottimizzazioni:
+
+- rappresentazione contigua della mappa;
+- precalcolo dei vicini;
+- Min Heap personalizzato;
+- cache dei percorsi;
+- Hash Table per accesso rapido ai risultati già calcolati.
+
+---
+
+# Testing
+
+Per verificare correttezza e robustezza dell'implementazione sono state realizzate diverse suite di test.
+
+### Edge cases
+
+Sono stati verificati:
+
+- percorsi con sorgente uguale alla destinazione;
+- nodi non raggiungibili;
+- inserimento/rimozione di rotte aeree;
+- aggiornamenti dei costi;
+- esagoni intransitabili;
+- gestione degli input limite.
+
+### Stress test
+
+Sono stati inoltre eseguiti test su mappe di grandi dimensioni contenenti migliaia di operazioni, comprendenti:
+
+- `travel_cost`
+- `change_cost`
+- `toggle_air_route`
+
+Lo scopo era verificare:
+
+- correttezza dopo numerosi aggiornamenti;
+- stabilità della gestione dinamica della memoria;
+- comportamento delle strutture dati su grandi istanze;
+- efficacia delle ottimizzazioni introdotte.
+
+---
+
+# Tecnologie utilizzate
+
+- Linguaggio **C**
+- Grafi pesati
+- Liste di adiacenza
+- Min Heap
+- Hash Table
+- Gestione dinamica della memoria
+
+---
+
+# Competenze acquisite
+
+Durante lo sviluppo del progetto sono stati approfonditi:
+
+- progettazione di strutture dati efficienti;
+- algoritmi su grafi;
+- algoritmo di Dijkstra;
+- progettazione di Hash Table;
+- implementazione di Heap;
+- analisi della complessità;
+- ottimizzazione delle prestazioni;
+- gestione della memoria in C.
+
+---
+
+# Nota
+
+Questo repository contiene **la mia implementazione personale** del progetto finale del corso di **Algoritmi e Strutture Dati** (Politecnico di Milano, A.A. 2024–2025).
+
+La descrizione presente nel README rappresenta una sintesi realizzata da me e non riproduce il testo originale della prova d'esame.
