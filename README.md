@@ -2,6 +2,8 @@
 
 > Progetto finale del corso di **Algoritmi e Strutture Dati** (A.A. 2024–2025).
 
+>Voto conseguito: 30 e lode 
+
 ## Descrizione
 
 MovHex è un simulatore di una rete di trasporto progettato per calcolare percorsi a costo minimo su una mappa composta da celle esagonali.
@@ -9,6 +11,8 @@ MovHex è un simulatore di una rete di trasporto progettato per calcolare percor
 La mappa rappresenta una superficie suddivisa in esagoni regolari, all'interno della quale i veicoli possono muoversi sia tramite collegamenti terrestri tra esagoni adiacenti sia attraverso rotte aeree dirette create dinamicamente.
 
 Il progetto è stato sviluppato come prova finale del corso di **Algoritmi e Strutture Dati** e pone particolare attenzione alla progettazione di strutture dati efficienti e all'implementazione di algoritmi per la ricerca del percorso minimo in presenza di modifiche dinamiche della rete.
+
+
 
 ## Funzionalità
 
